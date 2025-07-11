@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\gerso\Desktop\projeto djgos\Projeto  de Teste\myenv"
+VIRTUAL_ENV="C:\Users\gerso\Downloads\Projeto-dajngo-loja-main\Projeto-dajngo-loja-main\myenv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
