@@ -29,4 +29,4 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Comando para rodar gunicorn, ouvindo em todas as interfaces na porta 8000
-CMD ["gunicorn", "seuprojeto.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+CMD ["gunicorn", "lojaproject.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
