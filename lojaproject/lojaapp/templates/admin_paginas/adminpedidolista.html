@@ -1,0 +1,57 @@
+{% extends 'admin_paginas/adminbase.html' %}
+
+{% block title %}Todos os Pedidos{% endblock %}
+
+{% block content %}
+
+
+    
+<div class="container">
+    <div class="row">
+       <div class="col-md-12">
+         <h3> Todos os Pedidos </h3>
+        <table class = "table">
+            <thead>
+                <tr>
+                    <th>Codico</th>
+                    <th> ID Pedido</th>
+                    <th>Cliente</th>
+                    <th>Data Pedido</th>
+                    <th>Valor</th>
+                    <th>Status do Produto</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for pd in todospedido %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td><a href="{% url 'lojaapp:admindetalhepedido' pd.id%}">Pedido_{{pd.id}} </td></a>
+                        <td>{{pd.ordenado_por}}</td>
+                        <td>{{pd.criado_em}}</td>
+                        <td>{{pd.total}}</td>
+                        <td>{{pd.pedido_status}}</td>
+                    </tr>
+
+                {% endfor %}
+                
+            </tbody>
+            <tr>
+                <th colspan="4" class ="text-right"> Valor total </th>
+                <th>R$R$ {{pedido_obj.total }}</th>
+                </tr>
+
+           </table>
+    
+    
+    
+    </div>
+
+     </div>
+        
+     </div>
+    <
+   
+    
+ 
+    
+{% endblock %}

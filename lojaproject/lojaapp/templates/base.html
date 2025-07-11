@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <title>{% block title%} {%endblock%}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+    {% comment %} <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{% url "lojaapp:home" %}">Loja Django</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url "lojaapp:home" %}">Home <span class="sr-only"></span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url "lojaapp:TodosProdutos" %}">Categorias</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Minha conta
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+               {% if request.user.cliente %}
+                Seja bem vindo {{request.user.username}} !
+                <a dropdown-item href="{% url "lojaapp:clienteperfil" %}">MEU PERFIL</a> 
+                <a dropdown-item href="{% url "lojaapp:clientesair" %}">SAIR</a> 
+               
+              
+                {% else %}
+                <a dropdown-item href="{% url "lojaapp:clienteregistrar" %}">CADASTRAR CLIENTE</a> |
+                <a dropdown-item href="{% url "lojaapp:clienteentrar" %}">LOGIN</a>   
+                {% endif %}
+              </div>
+            </li>
+           
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+   {% endcomment %}
+    <div class="container mt-3">
+    <a href="{% url "lojaapp:home" %}"> HOME</a> |
+    <a href="{% url "lojaapp:sobre" %}"> SOBRE</a> |
+    <a href="{% url "lojaapp:contato" %}">CONTATOS</a> |
+    <a href="{% url "lojaapp:TodosProdutos" %}">CATEGORIAS</a> |
+    <a href="{% url "lojaapp:meucarro" %}">CARRINHO</a> |
+    
+    {% if request.user.cliente %}
+    Seja bem vindo {{request.user.username}} !
+    <a href="{% url "lojaapp:clienteperfil" %}">MEU PERFIL</a> 
+    <a href="{% url "lojaapp:clientesair" %}">SAIR</a> 
+   
+  
+    {% else %}
+    <a href="{% url "lojaapp:clienteregistrar" %}">CADASTRAR CLIENTE</a> |
+    <a href="{% url "lojaapp:clienteentrar" %}">LOGIN</a>   
+    {% endif %}
+    <div class="float-end">
+        <form action="{% url "lojaapp:pesquisar" %}" method = "GET">
+        <input type="text" name = "keyword" placeholder="Pesquisa Produtos" required>
+        <button class ="btn btn-success pull-rigth"> Pesquisa
+        </button>
+    </form>
+    </div>
+</div> 
+<hr>
+{% block content %}
+
+{% endblock %}
+<!-- Antes do Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</body>
+</html>

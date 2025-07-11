@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastrar Cliente{% endblock %}
+
+{% block content %}
+
+
+    <style>
+        .errorlist{
+            color: red;
+            list-style: none;
+        }
+    </style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+        <h3>Cadastrar Cliente</h3>      
+            <form action ="" method = "POST">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button class="btn btn-success"> Cadastrar </button>
+            </form>
+            <p> Se voce já é cadastradoa clique aqui<a href="{% url "lojaapp:clienteentrar" %}"> Login</a></p>
+        </div>
+     </div>
+    </div> 
+   
+    
+ 
+    
+{% endblock %}

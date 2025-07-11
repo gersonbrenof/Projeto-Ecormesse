@@ -1,0 +1,49 @@
+{% extends "admin_paginas/adminbase.html" %}
+{% load humanize %}
+{% block content%}
+<title>{% block title %} Administrado Home{% endblock  %}</title>
+
+
+<div class="container">
+    <div class="row">
+        
+        <div class="col-md-12">
+            <br>
+            <br>
+            <h2>Pedidos Pendentes</h2>
+            <table class = "table">
+                <thead>
+                    <tr>
+                        <th>Codico</th>
+                        <th> ID Pedido</th>
+                        <th>Cliente</th>
+                      
+                        <th>Data Pedido</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for pd in Pedido_Pendentes %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td><a href="{% url 'lojaapp:admindetalhepedido' pd.id%}">Pedido_{{pd.id}} </td></a>
+                            <td>{{pd.ordenado_por}}</td>
+                            <td>{{pd.criado_em}}</td>
+                            <td>{{pd.total}}</td>
+                        </tr>
+    
+                    {% endfor %}
+                    
+                </tbody>
+                <tr>
+                    <th colspan="4" class ="text-right"> Valor total </th>
+                    <th>R$R$ {{pedido_obj.total|intcomma }}</th>
+                    </tr>
+    
+               </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

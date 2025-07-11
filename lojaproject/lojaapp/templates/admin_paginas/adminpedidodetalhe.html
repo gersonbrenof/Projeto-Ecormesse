@@ -1,0 +1,66 @@
+{% extends 'admin_paginas/adminbase.html' %}
+{% load humanize %}
+{% block title %}Detalhe do pedido{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h3>Detalhes do pedido</h3>
+            <hr>
+            <p><span  class = "font-weigth-bold"></span><samp>Produto ID:  </samp><samp>Pedido_{{pedido_obj.id}}</p></samp>
+            <p><span  class = "font-weigth-bold"></span><samp>Status do Peido:   </samp><samp>{{pedido_obj.pedido_status}}</p></samp>
+            <p><span  class = "font-weigth-bold"></span><samp>Data Efetuado:   </samp><samp>{{pedido_obj.criado_em}}</p></samp>
+            <p><span  class = "font-weigth-bold"></span><samp>Informaçao do cliente:   </samp><samp>{{pedido_obj.ordenado_por}}</p></samp>
+            <p><span  class = "font-weigth-bold"></span><samp>telefone do cliente:   </samp><samp>{{pedido_obj.telefone}}</p></samp>
+            <p><span  class = "font-weigth-bold"></span><samp>Endereço do cliente:   </samp><samp>{{pedido_obj.endereco_envio}}</p></samp>
+            <p><span  class = "font-weigth-bold"></span><samp>Email do cliente:   </samp><samp>{{pedido_obj.email}}</p></samp>
+            <hr>
+            <h4>Items do Pedido</h4>
+           <table class ="table">
+            <thead>
+                <tr>
+                    <th>Codico</th>
+                    <th>Item</th>
+                    <th>Avaliação</th>
+                    <th>Quantidade</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for cp in pedido_obj.carro.carroproduto_set.all %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td><a target="blank" href="{% url "lojaapp:produtodetelahe" cp.produto.slug %}">{{cp.produto.titulo}}{{cp.produto.id}}</td></a>
+                        <td>{{cp.avaliacao}}</td>
+                        <td>{{cp.quantidade}}</td>
+                        <td>{{cp.subtotal}}</td>
+                    </tr>
+
+                {% endfor %}
+                
+            </tbody>
+
+
+           </table>
+           <form action="{% url 'lojaapp:adminpedidomudar' pedido_obj.id%}" method ="POST">
+            {% csrf_token %}
+            <select name="status" id="">
+                {% for  i, j in todosstatus  %}
+                <option value="{{i}}"{%if i == pedido_obj.pedido_status%} selected{% endif %}>{{j}}</option>
+                
+                {% endfor %}
+                
+            </select>
+            <button class ="btn btn-success">Alterar Status</button>
+           </form>
+        </div>
+    </div>
+</div>
+<
+   
+    
+ 
+    
+{% endblock %}
