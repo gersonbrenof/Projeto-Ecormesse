@@ -1,58 +1,70 @@
 {% extends 'base.html' %}
 {% load humanize %}
+
 {% block title %}Detalhe do Pedido{% endblock %}
 
 {% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h3 class="mb-4">Detalhes do Pedido</h3>
+      <hr>
 
+      <dl class="row mb-4">
+        <dt class="col-sm-4 fw-semibold">Pedido ID:</dt>
+        <dd class="col-sm-8">Pedido_{{ pedido_obj.id }}</dd>
 
-<div class="container">
-    <div class="row">
-    
-        <div class="col-md-8 max-auto">
-            <h3>Detalhes do pedido</h3>
-            <hr>
-            <p><span  class = "font-weigth-bold"></span><samp>Produto ID:  </samp><samp>Pedido_{{pedido_obj.id}}</p></samp>
-            <p><span  class = "font-weigth-bold"></span><samp>Status do Peido:   </samp><samp>{{pedido_obj.pedido_status}}</p></samp>
-            <p><span  class = "font-weigth-bold"></span><samp>Data Efetuado:   </samp><samp>{{pedido_obj.criado_em}}</p></samp>
-            <p><span  class = "font-weigth-bold"></span><samp>Informaçao do cliente:   </samp><samp>{{pedido_obj.ordenado_por}}</p></samp>
-            <p><span  class = "font-weigth-bold"></span><samp>telefone do cliente:   </samp><samp>{{pedido_obj.telefone}}</p></samp>
-            <p><span  class = "font-weigth-bold"></span><samp>Endereço do cliente:   </samp><samp>{{pedido_obj.endereco_envio}}</p></samp>
-            <p><span  class = "font-weigth-bold"></span><samp>Email do cliente:   </samp><samp>{{pedido_obj.email}}</p></samp>
-            <hr>
-            <h4>Items do Pedido</h4>
-           <table class ="table">
-            <thead>
-                <tr>
-                    <th>Codico</th>
-                    <th>Item</th>
-                    <th>Avaliação</th>
-                    <th>Quantidade</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                {%for cp in pedido_obj.carro.carroproduto_set.all %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        <td><a target="blank" href="{% url "lojaapp:produtodetelahe" cp.produto.slug %}">{{cp.produto.titulo}}{{cp.produto.id}}</td></a>
-                        <td>{{cp.avaliacao}}</td>
-                        <td>{{cp.quantidade}}</td>
-                        <td>{{cp.subtotal}}</td>
-                    </tr>
+        <dt class="col-sm-4 fw-semibold">Status do Pedido:</dt>
+        <dd class="col-sm-8">{{ pedido_obj.pedido_status }}</dd>
 
-                {% endfor %}
-                <tr>
-                <th colspan="4" class ="text-right"> Valor total </th>
-                <th>R$R$ {{pedido_obj.total|intcomma }}</th>
-                </tr>
-            </tbody>
+        <dt class="col-sm-4 fw-semibold">Data Efetuado:</dt>
+        <dd class="col-sm-8">{{ pedido_obj.criado_em }}</dd>
 
+        <dt class="col-sm-4 fw-semibold">Cliente:</dt>
+        <dd class="col-sm-8">{{ pedido_obj.ordenado_por }}</dd>
 
-           </table>
-        </div>
-  
+        <dt class="col-sm-4 fw-semibold">Telefone:</dt>
+        <dd class="col-sm-8">{{ pedido_obj.telefone }}</dd>
+
+        <dt class="col-sm-4 fw-semibold">Endereço de Envio:</dt>
+        <dd class="col-sm-8">{{ pedido_obj.endereco_envio }}</dd>
+
+        <dt class="col-sm-4 fw-semibold">Email:</dt>
+        <dd class="col-sm-8">{{ pedido_obj.email }}</dd>
+      </dl>
+
+      <h4 class="mb-3">Itens do Pedido</h4>
+      <table class="table table-striped table-bordered align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Código</th>
+            <th>Item</th>
+            <th>Avaliação</th>
+            <th>Quantidade</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cp in pedido_obj.carro.carroproduto_set.all %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+              <a href="{% url 'lojaapp:produtodetelahe' cp.produto.slug %}" target="_blank" class="text-decoration-none">
+                {{ cp.produto.titulo }} (ID: {{ cp.produto.id }})
+              </a>
+            </td>
+            <td>{{ cp.avaliacao }}</td>
+            <td>{{ cp.quantidade }}</td>
+            <td>R$ {{ cp.subtotal|floatformat:2|intcomma }}</td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <th colspan="4" class="text-end">Valor Total</th>
+            <th class="fw-bold">R$ {{ pedido_obj.total|floatformat:2|intcomma }}</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
- 
-</div>
-    
 {% endblock %}

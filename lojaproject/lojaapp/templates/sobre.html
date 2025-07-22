@@ -1,11 +1,35 @@
 {% extends 'base.html' %}
 
-{% block title %}home{% endblock %}
+{% block title %}Sobre{% endblock %}
 
 {% block content %}
-    
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 text-center">
+      <h1 class="mb-4 fw-bold">Seja bem-vindo à página Sobre</h1>
+      <p class="lead text-secondary mb-5">
+        Aqui você encontra informações sobre nossa loja, missão, valores e equipe dedicada a oferecer o melhor para você.
+      </p>
 
-    <h1>SEJA BEM VINDO A PAGINA SOBRE</h1>
-    
-    
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Nossa Missão</h5>
+          <p class="card-text">
+            Oferecer produtos de alta qualidade com atendimento excepcional, garantindo satisfação e confiança aos nossos clientes.
+          </p>
+
+          <h5 class="card-title mt-4">Nossa Equipe</h5>
+          <p class="card-text">
+            Contamos com profissionais qualificados, apaixonados pelo que fazem e sempre prontos para ajudar você.
+          </p>
+
+          <h5 class="card-title mt-4">Contato</h5>
+          <p class="card-text">
+            Tem dúvidas? Entre em contato conosco pelo formulário da página Contato. Estamos sempre à disposição!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

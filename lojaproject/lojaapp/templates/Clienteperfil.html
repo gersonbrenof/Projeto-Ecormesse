@@ -3,54 +3,54 @@
 {% block title %}Perfil{% endblock %}
 
 {% block content %}
-
-
-<div class="container">
-    <div class="row">
-    
-        <div class="col-md-8">
-        <h3>Detalhes do Cliente</h3>      
-           <p><span  class = "font-weigth-bold">Nome: </span>{{cliente.nome_completo}}</p>
-           <p><span  class = "font-weigth-bold">Usuario: </span>{{cliente.user.username}}</p>  
-           <p><span  class = "font-weigth-bold">Email: </span>{{cliente.user.email}}</p> 
-           <p><span  class = "font-weigth-bold">Enderço: </span>{{cliente.endereco}}</p>
-           <p><span  class = "font-weigth-bold">Cadastrado em: </span>{{cliente.data_on}}</p>     
+<div class="container my-4">
+  <div class="row">
+    <!-- Detalhes do Cliente -->
+    <div class="col-md-6 mb-4">
+      <h3>Detalhes do Cliente</h3>
+      <p><span class="fw-bold">Nome:</span> {{ cliente.nome_completo }}</p>
+      <p><span class="fw-bold">Usuário:</span> {{ cliente.user.username }}</p>
+      <p><span class="fw-bold">Email:</span> {{ cliente.user.email }}</p>
+      <p><span class="fw-bold">Endereço:</span> {{ cliente.endereco }}</p>
+      <p><span class="fw-bold">Cadastrado em:</span> {{ cliente.data_on|date:"d/m/Y" }}</p>
     </div>
-    <div class="col-md-6">
-        <h3> Detalhes da Compras Anteriores</h3>
-        <br>
-        <table class="table table-striped table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Código</th>
-                    <th scope="col">Pedido ID</th>
-                    <th scope="col">Valor</th>
-                    <th scope="col">Data Pedido</th>
-                    <th scope="col">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pedido in pedido %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    
-                    <td><a href="{% url "lojaapp:clientepedidodetalhe" pedido.pk %}"> Pedido_numero_{{ pedido.id }}</td></a>
-                    <td>{{ pedido.total }}</td>
-                    <td>{{ pedido.criado_em }}</td>
-                    <td>{{ pedido.pedido_status }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+
+    <!-- Compras Anteriores -->
+    <div class="col-md-6 mb-4">
+      <h3>Detalhes das Compras Anteriores</h3>
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col" class="text-nowrap">Código</th>
+              <th scope="col" class="text-nowrap">Pedido ID</th>
+              <th scope="col" class="text-nowrap">Valor</th>
+              <th scope="col" class="text-nowrap">Data Pedido</th>
+              <th scope="col" class="text-nowrap">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in pedido %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>
+                <a href="{% url 'lojaapp:clientepedidodetalhe' pedido.pk %}">
+                  Pedido_numero_{{ pedido.id }}
+                </a>
+              </td>
+              <td>R$ {{ pedido.total }}</td>
+              <td>{{ pedido.criado_em|date:"d/m/Y" }}</td>
+              <td>{{ pedido.pedido_status }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="text-center">Nenhum pedido encontrado.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
         </table>
-    </div
-           
-        </div>
-           
-        
-     </div>
-    </div> 
-   
-    
- 
-    
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
