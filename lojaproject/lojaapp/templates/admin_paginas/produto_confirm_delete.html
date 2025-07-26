@@ -1,0 +1,16 @@
+{% extends 'admin_paginas/adminbase.html' %}
+
+{% block title %}Confirmar Exclusão do Produto{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3>Confirmar Exclusão</h3>
+    <p>Tem certeza que deseja excluir o produto <strong>{{ object.titulo }}</strong>?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <a href="{% url 'lojaapp:adminhome' %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-danger">Excluir</button>
+    </form>
+</div>
+{% endblock %}

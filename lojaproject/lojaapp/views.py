@@ -2,14 +2,15 @@ from typing import Any
 from django.forms.models import BaseModelForm
 from django.http import HttpRequest, HttpResponse, HttpResponse as HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import View, TemplateView, CreateView, FormView, DetailView, ListView
+from django.views.generic import View, TemplateView, CreateView, FormView, DetailView, ListView, UpdateView,  DeleteView
 from django.urls import reverse_lazy
 from .forms import ChegarPedidoForms, ClienteRegistrarForms, ClienteEntrarForm
 from.models import *
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from django.core.paginator import Paginator
-
+from django.shortcuts import get_object_or_404
+from django.http import Http404
 class LojaMixin(object):
     def dispatch(self, request, *args, **kwargs):
         carro_id = request.session.get("carro_id")
@@ -20,16 +21,25 @@ class LojaMixin(object):
                 carro_obj.save()
         return super().dispatch(request, *args, **kwargs)
     
-
+def produto_detalhe(request, slug):
+    try:
+        produto = get_object_or_404(Produto, slug=slug)
+    except Exception:
+        raise Http404("Produto não encontrado ou slug inválido")
 
 class HomeView(LojaMixin, TemplateView):
     template_name = 'home.html'
-    def get_context_data(self, **kwargs ):
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        all_produtos = Produto.objects.all().order_by('-id')
-        paginator = Paginator(all_produtos,4)
+
+        # Filtra produtos com slug válido (não vazio, não nulo)
+        all_produtos = Produto.objects.exclude(slug__isnull=True).exclude(slug__exact='').order_by('-id')
+
+        paginator = Paginator(all_produtos, 4)
         page_number = self.request.GET.get('page')
         produto_list = paginator.get_page(page_number)
+
         context['produto_list'] = produto_list
         return context
         
@@ -156,7 +166,7 @@ class  CheckoutView(CreateView):
     success_url = reverse_lazy("lojaapp:home")
     
     def dispatch(self, request,*args, **kwargs):
-        if request.user.is_authenticated and request.user.cliente:
+        if request.user.is_authenticated and hasattr(request.user, 'cliente'):
             pass
         else:
             return redirect("/entrar/?next=/checkout/")
@@ -306,8 +316,7 @@ class AdminRequireMixin(object):
         return super().dispatch(request, *args, **kwargs)
 
     
-class AdminHomeView(AdminRequireMixin, TemplateView):
-    template_name = 'admin_paginas/adminhome.html'
+
     
 
 
@@ -359,3 +368,83 @@ class  PesquisarView(TemplateView):
         results = Produto.objects.filter(Q(titulo__contains=kw) | Q(discricao__contains=kw) |  Q(return_devolucao__contains=kw))
         context["results"] = results
         return context
+    
+from django.utils.text import slugify
+def gerar_slug_unico(model, texto):
+    slug_base = slugify(texto)
+    slug = slug_base
+    contador = 1
+
+    while model.objects.filter(slug=slug).exists():
+        slug = f"{slug_base}-{contador}"
+        contador += 1
+
+    return slug
+class ProdutoCreateManualView(View):
+    template_name = 'admin_paginas/produto_form_manual.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        titulo = request.POST.get('titulo')
+        slug = request.POST.get('slug')
+        categoria_nome = request.POST.get('categoria_nome').strip()  # Remove espaços extras
+        image = request.FILES.get('image')
+        preco_mercado = request.POST.get('preco_mercado')
+        venda = request.POST.get('venda')
+        descricao = request.POST.get('descricao')
+        garantia = request.POST.get('garantia')
+        return_devolucao = request.POST.get('return_devolucao')
+
+        # Tenta pegar a categoria pelo slug gerado a partir do nome
+        slug_categoria = slugify(categoria_nome)
+        try:
+            categoria = Categoria.objects.get(slug=slug_categoria)
+        except Categoria.DoesNotExist:
+            # Cria slug único para a categoria
+            slug_unico = gerar_slug_unico(Categoria, categoria_nome)
+            categoria = Categoria.objects.create(titulo=categoria_nome, slug=slug_unico)
+
+        Produto.objects.create(
+            titulo=titulo,
+            slug=slug,
+            categoria=categoria,
+            image=image,
+            preco_mercado=preco_mercado,
+            venda=venda,
+            discricao=descricao,  # lembre do nome correto no model: 'discricao'
+            garantia=garantia,
+            return_devolucao=return_devolucao
+        )
+        return redirect('lojaapp:adminhome')
+
+class AdminHomeView(AdminRequireMixin, TemplateView):
+    
+    template_name = 'admin_paginas/adminhome.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['produtos'] = Produto.objects.all()  # busca todos os produtos
+        return context
+
+
+class ProdutoUpdateView(AdminRequireMixin, UpdateView):
+    model = Produto
+    template_name = 'admin_paginas/atualizar_produto.html'
+    fields = ['titulo', 'slug', 'image', 'preco_mercado', 'venda', 'discricao', 'garantia', 'return_devolucao']
+    success_url = reverse_lazy('lojaapp:adminhome')
+
+    def form_valid(self, form):
+        categoria_nome = self.request.POST.get('categoria_nome')
+        if categoria_nome:
+            categoria_nome = categoria_nome.strip()
+            categoria, created = Categoria.objects.get_or_create(
+                titulo__iexact=categoria_nome,
+                defaults={'titulo': categoria_nome}
+            )
+            form.instance.categoria = categoria
+        return super().form_valid(form)
+class ProdutoDeleteView(AdminRequireMixin, DeleteView):
+    model = Produto
+    template_name = 'admin_paginas/produto_confirm_delete.html'  # criaremos esse template
+    success_url = reverse_lazy('lojaapp:adminhome')

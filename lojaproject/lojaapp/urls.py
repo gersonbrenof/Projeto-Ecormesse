@@ -32,4 +32,8 @@ urlpatterns = [
       
       
       path('pesquisa/', PesquisarView.as_view(), name='pesquisar'),
+      path('adminhome/produtos/', ProdutoCreateManualView.as_view(), name='produtos_cadastrar'),
+      path('adminhome/produtos/<int:pk>/editar/', ProdutoUpdateView.as_view(), name='produtos_editar'),  # editar produto
+       path('adminhome/produtos/<int:pk>/deletar/', ProdutoDeleteView.as_view(), name='produtos_deletar'), # deleta produto
+    
 ]
