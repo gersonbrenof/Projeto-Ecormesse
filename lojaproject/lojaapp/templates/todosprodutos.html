@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Todos Produtos{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4 fw-bold">Todos os Produtos por Categoria</h1> 
+
+    {% for cat in todosctegorias %}
+        <h2 class="mt-5 mb-3">{{ cat.titulo }}</h2> 
+        <div class="row">
+            {% for p in cat.produto_set.all %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <a href="{% url 'lojaapp:produtodetelahe' p.slug %}" class="text-decoration-none text-dark">
+                        <img src="{{ p.image.url }}" alt="{{ p.titulo }}" class="card-img-top" style="height: 180px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ p.titulo }}</h5>
+                            <p class="card-text mb-3">
+                                <small class="text-muted text-decoration-line-through">R$ {{ p.preco_mercado }}</small>
+                                <span class="fw-bold text-success ms-2">R$ {{ p.venda }}</span>
+                            </p>
+                            <a href="{% url 'lojaapp:addcarro' p.id %}" class="btn btn-success mt-auto w-100">Comprar</a>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

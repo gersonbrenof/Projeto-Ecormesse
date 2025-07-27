@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Detalhe do Pedido{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h3 class="mb-4">Detalhes do Pedido</h3>
+      <hr>
+
+      <dl class="row mb-4">
+        <dt class="col-sm-4 fw-semibold">Pedido ID:</dt>
+        <dd class="col-sm-8">Pedido_{{ pedido_obj.id }}</dd>
+
+        <dt class="col-sm-4 fw-semibold">Status do Pedido:</dt>
+        <dd class="col-sm-8">{{ pedido_obj.pedido_status }}</dd>
+
+        <dt class="col-sm-4 fw-semibold">Data Efetuado:</dt>
+        <dd class="col-sm-8">{{ pedido_obj.criado_em }}</dd>
+
+        <dt class="col-sm-4 fw-semibold">Cliente:</dt>
+        <dd class="col-sm-8">{{ pedido_obj.ordenado_por }}</dd>
+
+        <dt class="col-sm-4 fw-semibold">Telefone:</dt>
+        <dd class="col-sm-8">{{ pedido_obj.telefone }}</dd>
+
+        <dt class="col-sm-4 fw-semibold">Endereço de Envio:</dt>
+        <dd class="col-sm-8">{{ pedido_obj.endereco_envio }}</dd>
+
+        <dt class="col-sm-4 fw-semibold">Email:</dt>
+        <dd class="col-sm-8">{{ pedido_obj.email }}</dd>
+      </dl>
+
+      {% if user.is_authenticated and pedido_obj.pedido_status == "Pedido Processando" and pedido_obj.carro.cliente.user == user %}
+        <form method="POST" action="{% url 'lojaapp:cancelar_pedido' pedido_obj.pk %}" class="mb-4">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Cancelar Pedido</button>
+        </form>
+      {% endif %}
+
+
+      <h4 class="mb-3">Itens do Pedido</h4>
+      <table class="table table-striped table-bordered align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Código</th>
+            <th>Item</th>
+            <th>Avaliação</th>
+            <th>Quantidade</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cp in pedido_obj.carro.carroproduto_set.all %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+              <a href="{% url 'lojaapp:produtodetelahe' cp.produto.slug %}" target="_blank" class="text-decoration-none">
+                {{ cp.produto.titulo }} (ID: {{ cp.produto.id }})
+              </a>
+            </td>
+            <td>{{ cp.avaliacao }}</td>
+            <td>{{ cp.quantidade }}</td>
+            <td>R$ {{ cp.subtotal|floatformat:2|intcomma }}</td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <th colspan="4" class="text-end">Valor Total</th>
+            <th class="fw-bold">R$ {{ pedido_obj.total|floatformat:2|intcomma }}</th>
+          </tr>
+        </tbody>
+      </table>
+
+   
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "admin_paginas/adminbase.html" %}
+{% block content %}
+<h2 class="mb-4 text-center">Cadastro de Produto (Manual)</h2>
+
+<form method="post" enctype="multipart/form-data" class="mx-auto" style="max-width: 700px;">
+  {% csrf_token %}
+  
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label for="titulo" class="form-label fw-semibold">Título <span class="text-danger">*</span></label>
+      <input type="text" id="titulo" name="titulo" class="form-control" placeholder="Digite o título do produto" required autofocus>
+    </div>
+    
+    <div class="col-md-6">
+      <label for="slug" class="form-label fw-semibold">Slug <span class="text-danger">*</span></label>
+      <input type="text" id="slug" name="slug" class="form-control" placeholder="ex: produto-exemplo" required>
+    </div>
+
+   <div class="col-md-6">
+  <label for="categoria_nome" class="form-label fw-semibold">Categoria (Nome) <span class="text-danger">*</span></label>
+  <input type="text" id="categoria_nome" name="categoria_nome" class="form-control" placeholder="Nome da categoria" required>
+</div>
+
+    <div class="col-md-6">
+      <label for="image" class="form-label fw-semibold">Imagem <span class="text-danger">*</span></label>
+      <input type="file" id="image" name="image" class="form-control" accept="image/*" required>
+    </div>
+
+    <div class="col-md-6">
+      <label for="preco_mercado" class="form-label fw-semibold">Preço de Mercado (R$) <span class="text-danger">*</span></label>
+      <input type="number" id="preco_mercado" name="preco_mercado" class="form-control" placeholder="Ex: 100" min="0" step="0.01" required>
+    </div>
+
+    <div class="col-md-6">
+      <label for="venda" class="form-label fw-semibold">Preço de Venda (R$) <span class="text-danger">*</span></label>
+      <input type="number" id="venda" name="venda" class="form-control" placeholder="Ex: 80" min="0" step="0.01" required>
+    </div>
+
+    <div class="col-12">
+      <label for="descricao" class="form-label fw-semibold">Descrição <span class="text-danger">*</span></label>
+      <textarea id="descricao" name="descricao" rows="4" class="form-control" placeholder="Descreva o produto..." required></textarea>
+    </div>
+
+    <div class="col-md-6">
+      <label for="garantia" class="form-label fw-semibold">Garantia</label>
+      <input type="text" id="garantia" name="garantia" class="form-control" placeholder="Ex: 1 ano">
+    </div>
+
+    <div class="col-md-6">
+      <label for="return_devolucao" class="form-label fw-semibold">Política de Devolução</label>
+      <input type="text" id="return_devolucao" name="return_devolucao" class="form-control" placeholder="Condições de devolução">
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center mt-4">
+    <button type="submit" class="btn btn-success px-5 py-2 fs-5 rounded-3 shadow-sm">
+      💾 Salvar Produto
+    </button>
+  </div>
+</form>
+{% endblock %}

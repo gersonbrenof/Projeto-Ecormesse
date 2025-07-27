@@ -1,0 +1,92 @@
+{% extends 'admin_paginas/adminbase.html' %}
+{% load humanize %}
+{% block title %}Detalhe do Pedido{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h3 class="mb-3">Detalhes do Pedido</h3>
+            <hr>
+
+            <dl class="row">
+                <dt class="col-sm-4 fw-semibold">Pedido ID:</dt>
+                <dd class="col-sm-8">Pedido_{{ pedido_obj.id }}</dd>
+
+                <dt class="col-sm-4 fw-semibold">Status do Pedido:</dt>
+                <dd class="col-sm-8">{{ pedido_obj.pedido_status }}</dd>
+
+                <dt class="col-sm-4 fw-semibold">Data Efetuado:</dt>
+                <dd class="col-sm-8">{{ pedido_obj.criado_em|date:"d/m/Y H:i" }}</dd>
+
+                <dt class="col-sm-4 fw-semibold">Cliente:</dt>
+                <dd class="col-sm-8">{{ pedido_obj.ordenado_por }}</dd>
+
+                <dt class="col-sm-4 fw-semibold">Telefone:</dt>
+                <dd class="col-sm-8">{{ pedido_obj.telefone }}</dd>
+
+                <dt class="col-sm-4 fw-semibold">Endereço de Envio:</dt>
+                <dd class="col-sm-8">{{ pedido_obj.endereco_envio }}</dd>
+
+                <dt class="col-sm-4 fw-semibold">Email:</dt>
+                <dd class="col-sm-8">{{ pedido_obj.email }}</dd>
+            </dl>
+
+            <hr>
+            <h4>Itens do Pedido</h4>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Item</th>
+                            <th>Avaliação</th>
+                            <th>Quantidade</th>
+                            <th>Subtotal (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cp in pedido_obj.carro.carroproduto_set.all %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>
+                                    <a target="_blank" href="{% url 'lojaapp:produtodetelahe' cp.produto.slug %}">
+                                        {{ cp.produto.titulo }}
+                                    </a>
+                                </td>
+                                <td>{{ cp.avaliacao|default:"-" }}</td>
+                                <td>{{ cp.quantidade }}</td>
+                                <td>R$ {{ cp.subtotal|floatformat:2 }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">Nenhum item no pedido.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <form action="{% url 'lojaapp:adminpedidomudar' pedido_obj.id %}" method="POST" class="mt-4">
+                {% csrf_token %}
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label for="status" class="form-label fw-semibold">Alterar Status:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select name="status" id="status" class="form-select">
+                            {% for i, j in todosstatus %}
+                                <option value="{{ i }}" {% if i == pedido_obj.pedido_status %}selected{% endif %}>{{ j }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-success">Alterar Status</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

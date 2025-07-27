@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Perfil{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1 class="text-center mb-4">Editar Perfil</h1>
+
+      <!-- Mensagens de feedback (opcional, se usar Django messages) -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="nome" class="form-label">Nome completo</label>
+              <input type="text" class="form-control" id="nome" name="nome" value="{{ cliente.nome_completo }}" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="endereco" class="form-label">Endereço</label>
+              <input type="text" class="form-control" id="endereco" name="endereco" value="{{ cliente.endereco }}" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">E-mail</label>
+              <input type="email" class="form-control" id="email" name="email" value="{{ email }}" required>
+            </div>
+
+            <div class="text-end">
+              <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+              <a href="{% url 'lojaapp:clienteperfil' %}" class="btn btn-secondary ms-2">Cancelar</a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="text-center mt-4 text-muted">
+        <p>Atualize suas informações pessoais para manter seu cadastro sempre atualizado.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

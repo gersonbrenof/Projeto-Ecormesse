@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Contato{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1 class="text-center mb-4">Fale Conosco</h1>
+
+      <!-- Mensagens de sucesso ou erro -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <form method="POST" action="">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="nome" class="form-label">Nome completo</label>
+              <input type="text" class="form-control" id="nome" name="nome" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="telefone" class="form-label">Telefone</label>
+              <input type="tel" class="form-control" id="telefone" name="telefone" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="assunto" class="form-label">Assunto</label>
+              <input type="text" class="form-control" id="assunto" name="assunto" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="mensagem" class="form-label">Mensagem</label>
+              <textarea class="form-control" id="mensagem" name="mensagem" rows="5" required></textarea>
+            </div>
+
+            <div class="text-end">
+              <button type="submit" class="btn btn-primary">Enviar Mensagem</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <p class="text-muted">Responderemos em até 2 dias úteis. Obrigado por entrar em contato com nosso e-commerce!</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Pesquisar Produtos{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <h3>
+    Resultado da pesquisa 
+    <span class="text-success">"{{ request.GET.keyword }}"</span>
+  </h3>
+  <hr>
+
+  {% if results %}
+    <div class="row g-4">
+      {% for result in results %}
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="row g-0 align-items-center">
+            <div class="col-md-4">
+              <img src="{{ result.image.url }}" alt="{{ result.titulo }}" class="img-fluid rounded-start" style="height: 180px; object-fit: cover; width: 100%;">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">
+                  <a href="{% url 'lojaapp:produtodetelahe' result.slug %}" class="text-decoration-none text-dark">
+                    {{ result.titulo }}
+                  </a>
+                </h5>
+                <p class="card-text mb-2 text-truncate" style="max-height: 4.5em; overflow: hidden;">
+                  {{ result.descricao|truncatewords:50 }}
+                </p>
+                <p class="mb-3"><strong>Política de Devolução:</strong> {{ result.return_devolucao }}</p>
+                <a href="{% url 'lojaapp:addcarro' result.id %}" class="btn btn-success mt-auto align-self-start">
+                  Comprar
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">Nenhum resultado encontrado para "<strong>{{ request.GET.keyword }}</strong>".</p>
+  {% endif %}
+</div>
+{% endblock %}

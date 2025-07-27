@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center my-4">Seja bem-vindo à página Home</h1> 
+    <hr>
+
+    <div class="row mt-3">
+        {% for p in produto_list %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <a href="{% url 'lojaapp:produtodetelahe' p.slug %}" class="text-decoration-none text-dark">
+                    <img src="{{ p.image.url }}" alt="{{ p.titulo }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ p.titulo }}</h5>
+                        <p class="card-text mb-2">
+                            <small class="text-muted text-decoration-line-through">R$ {{ p.preco_mercado }}</small>
+                            <span class="fw-bold text-success ms-2">R$ {{ p.venda }}</span>
+                        </p>
+                        <a href="{% url 'lojaapp:addcarro' p.id %}" class="btn btn-success mt-auto">Comprar</a>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginação -->
+    <nav aria-label="Navegação de páginas">
+        <ul class="pagination justify-content-center">
+            {% if produto_list.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ produto_list.previous_page_number }}" aria-label="Página anterior">Anterior</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled" aria-disabled="true">
+                <span class="page-link">Anterior</span>
+            </li>
+            {% endif %}
+
+            {% for i in produto_list.paginator.page_range %}
+                {% if i == produto_list.number %}
+                <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if produto_list.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ produto_list.next_page_number }}" aria-label="Próxima página">Próxima</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled" aria-disabled="true">
+                <span class="page-link">Próxima</span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

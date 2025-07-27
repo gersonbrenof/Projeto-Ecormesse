@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5 col-lg-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h3 class="mb-4 text-center">Login</h3>
+
+          <form action="" method="POST" novalidate>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            
+            {% for field in form %}
+              <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                  <div class="text-danger small mt-1">
+                    {{ field.errors|striptags }}
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+
+            {% if error %}
+              <div class="alert alert-danger" role="alert">
+                {{ error }}
+              </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-success w-100">Entrar</button>
+          </form>
+
+          <p class="mt-3 text-center">
+            Ainda não tem cadastro? 
+            <a href="{% url 'lojaapp:clienteregistrar' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
+              Cadastre-se aqui
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

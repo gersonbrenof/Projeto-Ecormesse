@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <div class="row">
+    <!-- Detalhes do Cliente -->
+    <div class="col-md-6 mb-4">
+      <h3>Detalhes do Cliente</h3>
+      <p><span class="fw-bold">Nome:</span> {{ cliente.nome_completo }}</p>
+      <p><span class="fw-bold">Usuário:</span> {{ cliente.user.username }}</p>
+      <p><span class="fw-bold">Email:</span> {{ cliente.user.email }}</p>
+      <p><span class="fw-bold">Endereço:</span> {{ cliente.endereco }}</p>
+      <p><span class="fw-bold">Cadastrado em:</span> {{ cliente.data_on|date:"d/m/Y" }}</p>
+
+      <!-- Botão Editar Perfil-->
+      <a href="{%url 'lojaapp:editarperfil' %}" class="btn btn-primary mt-3">Editar Perfil</a>  
+    </div>
+
+    <!-- Compras Anteriores -->
+    <div class="col-md-6 mb-4">
+      <h3>Detalhes das Compras Anteriores</h3>
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col" class="text-nowrap">Código</th>
+              <th scope="col" class="text-nowrap">Pedido ID</th>
+              <th scope="col" class="text-nowrap">Valor</th>
+              <th scope="col" class="text-nowrap">Data Pedido</th>
+              <th scope="col" class="text-nowrap">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in pedido %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>
+                <a href="{% url 'lojaapp:clientepedidodetalhe' pedido.pk %}">
+                  Pedido_numero_{{ pedido.id }}
+                </a>
+              </td>
+              <td>R$ {{ pedido.total }}</td>
+              <td>{{ pedido.criado_em|date:"d/m/Y" }}</td>
+              <td>{{ pedido.pedido_status }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="text-center">Nenhum pedido encontrado.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

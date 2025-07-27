@@ -1,0 +1,33 @@
+{% extends "admin_paginas/adminbase.html" %}
+{% block content %}
+<h2>Gerenciar Produtos</h2>
+
+<a href="{% url 'lojaapp:produtos_cadastrar' %}" class="btn btn-success mb-3">Cadastrar Novo Produto</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Título</th>
+            <th>Preço de Venda</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for produto in produtos %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ produto.titulo }}</td>
+            <td>R$ {{ produto.venda }}</td>
+            <td style="min-width: 130px;">
+            <div class="d-flex gap-2">
+                <a href="{% url 'lojaapp:produtos_editar' produto.pk %}" class="btn btn-warning btn-sm flex-grow-1">✏️ Editar</a>
+                <a href="{% url 'lojaapp:produtos_deletar' produto.pk %}" class="btn btn-danger btn-sm flex-grow-1">🗑️ Deletar</a>
+            </div>
+            </td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

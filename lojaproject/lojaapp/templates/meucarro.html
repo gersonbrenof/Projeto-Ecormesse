@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Meu Carrinho{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h4>Itens do Carrinho</h4>
+
+  {% if carro.carroproduto_set.all %}
+  <table class="table table-striped align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>Código</th>
+        <th>Produto</th>
+        <th>Avaliação</th>
+        <th>Quantidade</th>
+        <th>Subtotal</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cp in carro.carroproduto_set.all %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ cp.produto.titulo }}</td>
+        <td>{{ cp.avaliacao }}</td>
+        <td>{{ cp.quantidade }}</td>
+        <td>R$ {{ cp.subtotal }}</td>
+        <td>
+          <a href="{% url 'lojaapp:manipularcarro' cp.id %}?acao=inc" class="btn btn-sm btn-success me-1" title="Adicionar quantidade">+</a>
+          <a href="{% url 'lojaapp:manipularcarro' cp.id %}?acao=dcr" class="btn btn-sm btn-warning me-1" title="Diminuir quantidade">−</a>
+          <a href="{% url 'lojaapp:manipularcarro' cp.id %}?acao=rmv" class="btn btn-sm btn-danger" title="Remover produto">×</a>
+        </td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <th colspan="4" class="text-end">Total do Carrinho:</th>
+        <th colspan="2" class="fw-bold">R$ {{ carro.total }}</th>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="d-flex justify-content-between">
+    <a href="{% url 'lojaapp:limparcarro' %}" class="btn btn-warning">Limpar Carrinho</a>
+    <a href="{% url 'lojaapp:checkout' %}" class="btn btn-info text-white">Processar Compra</a>
+  </div>
+
+  {% else %}
+  <div class="alert alert-info" role="alert">
+    Seu carrinho está vazio.
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

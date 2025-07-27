@@ -1,0 +1,52 @@
+{% extends 'admin_paginas/adminbase.html' %}
+
+{% block title %}Todos os Pedidos{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3 class="mb-4">Todos os Pedidos</h3>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>ID do Pedido</th>
+                    <th>Cliente</th>
+                    <th>Data do Pedido</th>
+                    <th>Valor (R$)</th>
+                    <th>Status do Pedido</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pd in todospedido %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <a href="{% url 'lojaapp:admindetalhepedido' pd.id %}">
+                                Pedido_{{ pd.id }}
+                            </a>
+                        </td>
+                        <td>{{ pd.ordenado_por }}</td>
+                        <td>{{ pd.criado_em|date:"d/m/Y H:i" }}</td>
+                        <td>R$ {{ pd.total|floatformat:2 }}</td>
+                        <td>{{ pd.pedido_status }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">Nenhum pedido encontrado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            {% if pedido_obj %}
+            <tfoot>
+                <tr class="table-secondary fw-bold">
+                    <td colspan="4" class="text-end">Valor Total</td>
+                    <td colspan="2">R$ {{ pedido_obj.total|floatformat:2 }}</td>
+                </tr>
+            </tfoot>
+            {% endif %}
+        </table>
+    </div>
+</div>
+{% endblock %}
